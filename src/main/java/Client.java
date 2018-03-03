@@ -4,14 +4,14 @@ import java.util.TimerTask;
 
 public class Client {
 
+    public static int NUM_CHARS_TOKEN = 8;
+
     private static long TTL;
     static {
         try {
             TTL = Integer.parseInt(System.getProperty("ttl")) * 1000; // в миллисекундах
-            System.out.println("TTL set in " + TTL/1000 + " seconds");
         } catch (NumberFormatException e) {
             TTL = 15 * 1000;
-            System.out.println("TTL set in 15 seconds");
         }
     }
 
@@ -44,12 +44,12 @@ public class Client {
     }
 
     public void generateToken() {
-        token = new RandomStringGenerator().generate(4);
+        token = new RandomStringGenerator().generate(NUM_CHARS_TOKEN);
     }
 
     public String getToken() { // для перевода в JSON
         return token;
-    }
+    } // для fastJson
 
     public boolean hasToken(String receivedToken) {
         if (token == null) {

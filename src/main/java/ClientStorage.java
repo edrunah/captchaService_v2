@@ -26,6 +26,9 @@ public class ClientStorage {
         } else {
             throw new IllegalArgumentException();
         }
+    }
 
+    public void removeClient(UUID publicUUID) {
+        clientMap.remove(publicUUID);
     }
 }

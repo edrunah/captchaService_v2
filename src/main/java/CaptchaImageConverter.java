@@ -12,7 +12,6 @@ public class CaptchaImageConverter implements ImageConverter {
         ImageIO.write(image, "png", baos);
         InputStream is = new ByteArrayInputStream(baos.toByteArray());
         return is;
-
     }
 }
 

@@ -1,4 +1,5 @@
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import fi.iki.elonen.NanoHTTPD;
 import fi.iki.elonen.NanoHTTPD.Response;
@@ -26,7 +27,6 @@ public class NewCaptcha implements IResponser {
             String body = JSON.toJSONString(captcha, filter);
             return NanoHTTPD.newFixedLengthResponse(Status.OK, "application/json", body);
         } catch (NullPointerException e) {
-            e.printStackTrace();
             return NanoHTTPD
                 .newFixedLengthResponse(Status.BAD_REQUEST, "text/plain", "Not enough data\n");
         } catch (IllegalArgumentException e) {
