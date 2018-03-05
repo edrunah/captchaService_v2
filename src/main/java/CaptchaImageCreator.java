@@ -8,6 +8,10 @@ import java.awt.image.BufferedImage;
 
 public class CaptchaImageCreator implements ImageCreator {
 
+    public static void loadAWTLibraries() {
+        new CaptchaImageCreator().create("aaaa");
+    }
+
     public BufferedImage create(String text) {
         BufferedImage img = new BufferedImage(180, 56, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = img.createGraphics();

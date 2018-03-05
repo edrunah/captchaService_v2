@@ -14,6 +14,7 @@ public class CaptchaHttpServer extends NanoHTTPD {
     }
 
     public static void main(String[] args) {
+        CaptchaImageCreator.loadAWTLibraries();
         ServerRunner.run(CaptchaHttpServer.class);
     }
 
