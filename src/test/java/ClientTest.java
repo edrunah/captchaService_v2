@@ -8,6 +8,8 @@ public class ClientTest {
 
     Client client;
 
+
+
     @Before
     public void setUp() throws Exception {
         client = new Client();
@@ -22,13 +24,7 @@ public class ClientTest {
 
     @Test
     public void getCaptcha() {
-        try {
-            Field f = client.getClass().getDeclaredField("captcha");
-            f.setAccessible(true);
-            f.set(client, new Captcha());
-        } catch (Exception e) {
-            fail();
-        }
+        ServerParameters.setCaptchaId(client, "");
     }
 
     @Test

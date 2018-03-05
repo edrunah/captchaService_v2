@@ -54,4 +54,14 @@ public class ActionSwitchTest {
 
         assertTrue(isVerify);
     }
+
+    @Test
+    public void defaultResponse() {
+        ActionSwitch actionSwitch = new ActionSwitch(Method.GET, "/smth");
+
+        IResponser responser = actionSwitch.selectResponseAction();
+        boolean isDefault = responser instanceof DefaultResponse;
+
+        assertTrue(isDefault);
+    }
 }

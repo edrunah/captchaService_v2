@@ -29,11 +29,11 @@ public class CaptchaHttpServer extends NanoHTTPD {
                 session.parseBody(files);
             } catch (IOException ioe) {
                 return NanoHTTPD
-                    .newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_PLAINTEXT,
+                    .newFixedLengthResponse(Response.Status.INTERNAL_ERROR, "text/plain",
                         "SERVER INTERNAL ERROR: IOException: " + ioe.getMessage());
             } catch (ResponseException re) {
                 return NanoHTTPD
-                    .newFixedLengthResponse(re.getStatus(), MIME_PLAINTEXT, re.getMessage());
+                    .newFixedLengthResponse(re.getStatus(), "text/plain", re.getMessage());
             }
         }
         ActionSwitch switcher = new ActionSwitch(method, uri);

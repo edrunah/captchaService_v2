@@ -5,7 +5,6 @@ import fi.iki.elonen.NanoHTTPD.Response;
 import fi.iki.elonen.NanoHTTPD.Response.IStatus;
 import fi.iki.elonen.NanoHTTPD.Response.Status;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -46,7 +45,7 @@ public class NewCaptchaTest {
 
     @Test
     public void noSuchClient() {
-        initRequestParameter();
+        RequestParameters.initParameter(parameters, "public", PUBLIC_UUID_STRING);
 
         Response response = responser.generateResponse(parameters);
         IStatus status = response.getStatus();
@@ -73,7 +72,7 @@ public class NewCaptchaTest {
     @Test
     public void newCaptchaProductionIsTrue() {
         System.setProperty("production", "true");
-        initRequestParameter();
+        RequestParameters.initParameter(parameters, "public", PUBLIC_UUID_STRING);
 
         Response response = responser.generateResponse(parameters);
         IStatus status = response.getStatus();
@@ -97,7 +96,7 @@ public class NewCaptchaTest {
 
     @Test
     public void newCaptchaProductionNotTrue() {
-        initRequestParameter();
+        RequestParameters.initParameter(parameters, "public", PUBLIC_UUID_STRING);
 
         Response response = responser.generateResponse(parameters);
         IStatus status = response.getStatus();
@@ -121,9 +120,4 @@ public class NewCaptchaTest {
         }
     }
 
-    private void initRequestParameter() {
-        List<String> parameter = new LinkedList<>();
-        parameter.add(PUBLIC_UUID_STRING);
-        parameters.put("public", parameter);
-    }
 }

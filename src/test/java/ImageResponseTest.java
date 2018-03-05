@@ -1,6 +1,5 @@
 import static org.junit.Assert.*;
 
-import com.alibaba.fastjson.JSON;
 import fi.iki.elonen.NanoHTTPD.Response;
 import fi.iki.elonen.NanoHTTPD.Response.IStatus;
 import fi.iki.elonen.NanoHTTPD.Response.Status;
@@ -15,15 +14,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
-public class SolveTest {
+public class ImageResponseTest {
 
     private IResponser responser;
 
     private String PUBLIC_UUID_STRING = "c88c4314-0e11-3a44-9a4b-dd2eba64c868";
 
     private String CAPTCHAID = "12345678";
-
-    private String ANSWER = "1234";
 
     private Client client;
 
@@ -34,7 +31,7 @@ public class SolveTest {
 
     @Before
     public void setUp() {
-        responser = new Solve();
+        responser = new ImageResponse();
         UUID publicKey = UUID.fromString(PUBLIC_UUID_STRING);
         if (!testName.getMethodName().equals("noSuchClient")) {
             ClientStorage storage = ClientStorage.getInstance();
@@ -55,7 +52,6 @@ public class SolveTest {
     public void noSuchClient() {
         RequestParameters.initParameter(parameters, "public", PUBLIC_UUID_STRING);
         RequestParameters.initParameter(parameters, "request", CAPTCHAID);
-        RequestParameters.initParameter(parameters, "answer", ANSWER);
 
         Response response = responser.generateResponse(parameters);
         IStatus status = response.getStatus();
@@ -72,9 +68,6 @@ public class SolveTest {
         List<String> parameterPublic = new LinkedList<>();
         parameterPublic.add(PUBLIC_UUID_STRING);
         parameters.put("public", parameterPublic);
-        List<String> parameterRequest = new LinkedList<>();
-        parameterRequest.add(CAPTCHAID);
-        parameters.put("request", parameterRequest);
 
         Response response = responser.generateResponse(parameters);
         IStatus status = response.getStatus();
@@ -87,54 +80,9 @@ public class SolveTest {
     }
 
     @Test
-    public void rightPairRequestAnswer() {
-        ServerParameters.setCaptchaIdAndAnswer(client, CAPTCHAID, ANSWER);
+    public void noSuchRequest() {
         RequestParameters.initParameter(parameters, "public", PUBLIC_UUID_STRING);
         RequestParameters.initParameter(parameters, "request", CAPTCHAID);
-        RequestParameters.initParameter(parameters, "answer", ANSWER);
-
-        Response response = responser.generateResponse(parameters);
-        IStatus status = response.getStatus();
-        String mimeType = response.getMimeType();
-        String body = BodyMaker.getBody(response);
-        assertNotEquals("Правильный ответ не принят", "Wrong pair request-answer\n", body);
-        try {
-            Map<String, Object> responseBody = JSON.parseObject(body);
-            String responseToken = (String) responseBody.get("response");
-
-            assertEquals("Неверный статус отклика", Status.OK, status);
-            assertEquals("Неверный Mime-type", "application/json", mimeType);
-            assertEquals("Длина response неверна", Client.NUM_CHARS_TOKEN, responseToken.length());
-        } catch (ClassCastException e) {
-            fail("Неверный тип объекта response");
-        } catch (NullPointerException e) {
-            fail("В параметрах JSON отсутствует response");
-        }
-    }
-
-    @Test
-    public void twoTimesRightPairRequestAnswer() {
-        ServerParameters.setCaptchaIdAndAnswer(client, CAPTCHAID, ANSWER);
-        RequestParameters.initParameter(parameters, "public", PUBLIC_UUID_STRING);
-        RequestParameters.initParameter(parameters, "request", CAPTCHAID);
-        RequestParameters.initParameter(parameters, "answer", ANSWER);
-
-        Response responseOne = responser.generateResponse(parameters);
-        Response responseTwo = responser.generateResponse(parameters);
-        IStatus status = responseTwo.getStatus();
-        String mimeType = responseTwo.getMimeType();
-        String body = BodyMaker.getBody(responseTwo);
-
-        assertEquals("Неверный статус отклика", Status.BAD_REQUEST, status);
-        assertEquals("Неверный Mime-type", "text/plain", mimeType);
-        assertEquals("Wrong pair request-answer\n", body);
-    }
-
-    @Test
-    public void wrongPairRequestAnswer() {
-        RequestParameters.initParameter(parameters, "public", PUBLIC_UUID_STRING);
-        RequestParameters.initParameter(parameters, "request", CAPTCHAID);
-        RequestParameters.initParameter(parameters, "answer", ANSWER);
 
         Response response = responser.generateResponse(parameters);
         IStatus status = response.getStatus();
@@ -143,7 +91,22 @@ public class SolveTest {
 
         assertEquals("Неверный статус отклика", Status.BAD_REQUEST, status);
         assertEquals("Неверный Mime-type", "text/plain", mimeType);
-        assertEquals("Wrong pair request-answer\n", body);
+        assertEquals("Неверное тело ответа", body, "No such request\n");
+    }
+
+    @Test
+    public void successfulImageCreation() {
+        ServerParameters.setCaptchaId(client, CAPTCHAID);
+        RequestParameters.initParameter(parameters, "public", PUBLIC_UUID_STRING);
+        RequestParameters.initParameter(parameters, "request", CAPTCHAID);
+
+        Response response = responser.generateResponse(parameters);
+        IStatus status = response.getStatus();
+        String mimeType = response.getMimeType();
+        String body = BodyMaker.getBody(response);
+
+        assertEquals("Неверный статус отклика", Status.CREATED, status);
+        assertEquals("Неверный Mime-type", "image/png", mimeType);
     }
 
 }

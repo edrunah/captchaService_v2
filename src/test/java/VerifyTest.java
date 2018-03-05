@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import fi.iki.elonen.NanoHTTPD.Response;
 import fi.iki.elonen.NanoHTTPD.Response.IStatus;
 import fi.iki.elonen.NanoHTTPD.Response.Status;
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -56,7 +55,8 @@ public class VerifyTest {
 
     @Test
     public void noSuchClient() {
-        initRequestParameters();
+        RequestParameters.initParameter(parameters, "secret", SECRET_UUID_STRING);
+        RequestParameters.initParameter(parameters, "response", TOKEN);
 
         Response response = responser.generateResponse(parameters);
         IStatus status = response.getStatus();
@@ -86,7 +86,8 @@ public class VerifyTest {
 
     @Test
     public void successFalseVerify() {
-        initRequestParameters();
+        RequestParameters.initParameter(parameters, "secret", SECRET_UUID_STRING);
+        RequestParameters.initParameter(parameters, "response", TOKEN);
 
         Response response = responser.generateResponse(parameters);
         IStatus status = response.getStatus();
@@ -98,10 +99,10 @@ public class VerifyTest {
             Boolean success = (Boolean) responseBody.get("success");
             Integer errorCode = (Integer) responseBody.get("errorCode");
 
-            assertEquals("Неверный статус отклика", Status.NOT_ACCEPTABLE, status);
+            assertEquals("Неверный статус отклика", Status.FORBIDDEN, status);
             assertEquals("Неверный Mime-type", "application/json", mimeType);
             assertEquals("success", false, success.booleanValue());
-            assertEquals("errorCode", 406, errorCode.intValue());
+            assertEquals("errorCode", 403, errorCode.intValue());
         } catch (ClassCastException e) {
             fail("Неверный тип объекта success или errorCode");
         } catch (NullPointerException e) {
@@ -112,8 +113,9 @@ public class VerifyTest {
 
     @Test
     public void successTrueVerify() {
-        setTokenServerValue();
-        initRequestParameters();
+        ServerParameters.setToken(client, TOKEN);
+        RequestParameters.initParameter(parameters, "secret", SECRET_UUID_STRING);
+        RequestParameters.initParameter(parameters, "response", TOKEN);
 
         Response response = responser.generateResponse(parameters);
         IStatus status = response.getStatus();
@@ -139,8 +141,9 @@ public class VerifyTest {
 
     @Test
     public void twoTimesSameTokenVerify() {
-        setTokenServerValue();
-        initRequestParameters();
+        ServerParameters.setToken(client, TOKEN);
+        RequestParameters.initParameter(parameters, "secret", SECRET_UUID_STRING);
+        RequestParameters.initParameter(parameters, "response", TOKEN);
 
         Response responseOne = responser.generateResponse(parameters);
         Response responseTwo = responser.generateResponse(parameters);
@@ -153,35 +156,16 @@ public class VerifyTest {
             Boolean success = (Boolean) responseBody.get("success");
             Integer errorCode = (Integer) responseBody.get("errorCode");
 
-            assertEquals("Неверный статус отклика", Status.NOT_ACCEPTABLE, status);
+            assertEquals("Неверный статус отклика", Status.FORBIDDEN, status);
             assertEquals("Неверный Mime-type", "application/json", mimeType);
             assertEquals("success", false, success.booleanValue());
-            assertEquals("errorCode", 406, errorCode.intValue());
+            assertEquals("errorCode", 403, errorCode.intValue());
         } catch (ClassCastException e) {
             fail("Неверный тип объекта success или errorCode");
         } catch (NullPointerException e) {
             fail("В параметрах JSON отсутствует success или errorCode");
         }
 
-    }
-
-    private void setTokenServerValue() {
-        try {
-            Field f = client.getClass().getDeclaredField("token");
-            f.setAccessible(true);
-            f.set(client, TOKEN);
-        } catch (Exception e) {
-            fail();
-        }
-    }
-
-    private void initRequestParameters() {
-        List<String> parameterSecret = new LinkedList<>();
-        parameterSecret.add(SECRET_UUID_STRING);
-        parameters.put("secret", parameterSecret);
-        List<String> parameterResponse = new LinkedList<>();
-        parameterResponse.add(TOKEN);
-        parameters.put("response", parameterResponse);
     }
 
 }

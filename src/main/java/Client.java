@@ -6,12 +6,13 @@ public class Client {
 
     public static int NUM_CHARS_TOKEN = 8;
 
-    private static long TTL;
+    public static long TIME_TO_LIVE;
+
     static {
         try {
-            TTL = Integer.parseInt(System.getProperty("ttl")) * 1000; // в миллисекундах
+            TIME_TO_LIVE = Integer.parseInt(System.getProperty("ttl")) * 1000; // в миллисекундах
         } catch (NumberFormatException e) {
-            TTL = 15 * 1000;
+            TIME_TO_LIVE = 15 * 1000;
         }
     }
 
@@ -24,7 +25,7 @@ public class Client {
         captcha = new Captcha();
         captcha.initialize();
         Timer timer = new Timer();
-        timer.schedule(new CaptchaKill(), TTL);
+        timer.schedule(new CaptchaKill(), TIME_TO_LIVE);
     }
 
     public Captcha getCaptcha() {
@@ -63,6 +64,7 @@ public class Client {
     }
 
     private class CaptchaKill extends TimerTask {
+
         @Override
         public void run() {
             deleteCaptcha();
