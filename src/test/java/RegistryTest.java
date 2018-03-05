@@ -20,10 +20,10 @@ public class RegistryTest {
         Map<String, Object> responseBody = JSON.parseObject(body);
 
         try {
-            String publicUUIDString = (String) responseBody.get("public");
-            String secretUUIDString = (String) responseBody.get("secret");
-            UUID.fromString(publicUUIDString);
-            UUID.fromString(secretUUIDString);
+            String publicKeyString = (String) responseBody.get("public");
+            String secretKeyString = (String) responseBody.get("secret");
+            UUID.fromString(publicKeyString);
+            UUID.fromString(secretKeyString);
         } catch (ClassCastException e) {
             fail("Неверный тип объекта public или secret");
         } catch (IllegalArgumentException e) {

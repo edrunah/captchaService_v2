@@ -10,11 +10,11 @@ public class Solve implements IResponser {
 
     public Response generateResponse(Map<String, List<String>> parameters) {
         try {
-            UUID receivedPublicUUID = UUID.fromString(parameters.get("public").get(0));
+            UUID receivedPublicKey = UUID.fromString(parameters.get("public").get(0));
             String receivedCaptchaId = parameters.get("request").get(0);
             String receivedAnswer = parameters.get("answer").get(0);
             ClientStorage storage = ClientStorage.getInstance();
-            Client client = storage.getClient(receivedPublicUUID);
+            Client client = storage.getClient(receivedPublicKey);
             Captcha captcha = client.getCaptcha();
             if (client.hasCaptchaId(receivedCaptchaId) && captcha.hasAnswer(receivedAnswer)) {
                 client.generateToken();

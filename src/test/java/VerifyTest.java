@@ -36,13 +36,13 @@ public class VerifyTest {
     @Before
     public void setUp() {
         responser = new Verify();
-        UUID secretUUID = UUID.fromString(SECRET_UUID_STRING);
-        UUID publicUUID = new KeyGenerator().getPublicKey(secretUUID);
-        PUBLIC_UUID_STRING = publicUUID.toString();
+        UUID secretKey = UUID.fromString(SECRET_UUID_STRING);
+        UUID publicKey = new KeyGenerator().getPublicKey(secretKey);
+        PUBLIC_UUID_STRING = publicKey.toString();
         if (!testName.getMethodName().equals("noSuchClient")) {
             ClientStorage storage = ClientStorage.getInstance();
             client = new Client();
-            storage.addNewClient(publicUUID, client);
+            storage.addNewClient(publicKey, client);
         }
         parameters = new HashMap<>();
     }
@@ -50,8 +50,8 @@ public class VerifyTest {
     @After
     public void tearDown() {
         ClientStorage storage = ClientStorage.getInstance();
-        UUID publicUUID = UUID.fromString(PUBLIC_UUID_STRING);
-        storage.removeClient(publicUUID);
+        UUID publicKey = UUID.fromString(PUBLIC_UUID_STRING);
+        storage.removeClient(publicKey);
     }
 
     @Test

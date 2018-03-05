@@ -12,17 +12,18 @@ public class ImageResponse implements IResponser {
 
     public Response generateResponse(Map<String, List<String>> parameters) {
         try {
-            UUID receivedPublicUUID = UUID.fromString(parameters.get("public").get(0));
+            UUID receivedPublicKey = UUID.fromString(parameters.get("public").get(0));
             String receivedCaptchaId = parameters.get("request").get(0);
             ClientStorage storage = ClientStorage.getInstance();
-            Client client = storage.getClient(receivedPublicUUID);
+            Client client = storage.getClient(receivedPublicKey);
             if (client.hasCaptchaId(receivedCaptchaId)) {
                 Captcha captcha = client.getCaptcha();
                 String answer = captcha.getAnswer();
                 BufferedImage image = new CaptchaImageCreator().create(answer);
-                try (InputStream is = new CaptchaImageConverter().convertImageToStream(image)) {
+                try (InputStream inputStream = new CaptchaImageConverter()
+                    .convertImageToStream(image)) {
                     return NanoHTTPD
-                        .newFixedLengthResponse(Status.CREATED, "image/png", is, -1);
+                        .newFixedLengthResponse(Status.CREATED, "image/png", inputStream, -1);
                 } catch (IOException e) {
                     return NanoHTTPD
                         .newFixedLengthResponse(Status.INTERNAL_ERROR, "text/plain",

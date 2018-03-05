@@ -1,11 +1,9 @@
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import fi.iki.elonen.NanoHTTPD;
 import fi.iki.elonen.NanoHTTPD.Response;
 import fi.iki.elonen.NanoHTTPD.Response.Status;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -14,11 +12,11 @@ public class Verify implements IResponser {
 
     public Response generateResponse(Map<String, List<String>> parameters) {
         try {
-            UUID receivedSecretUUID = UUID.fromString(parameters.get("secret").get(0));
-            UUID calculatedPublicUUID = new KeyGenerator().getPublicKey(receivedSecretUUID);
+            UUID receivedSecretKey = UUID.fromString(parameters.get("secret").get(0));
+            UUID calculatedPublicKey = new KeyGenerator().getPublicKey(receivedSecretKey);
             String receivedToken = parameters.get("response").get(0);
             ClientStorage storage = ClientStorage.getInstance();
-            Client client = storage.getClient(calculatedPublicUUID);
+            Client client = storage.getClient(calculatedPublicKey);
             Boolean success;
             Integer errorCode;
             Status status;
@@ -29,8 +27,8 @@ public class Verify implements IResponser {
                 status = Status.OK;
             } else {
                 success = false;
-                errorCode = 406;
-                status = Status.NOT_ACCEPTABLE;
+                errorCode = 403;
+                status = Status.FORBIDDEN;
             }
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("success", success);

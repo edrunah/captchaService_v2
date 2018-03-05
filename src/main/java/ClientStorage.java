@@ -15,20 +15,20 @@ public class ClientStorage {
         return storage;
     }
 
-    public void addNewClient(UUID publicUUID, Client client) {
-        clientMap.put(publicUUID, client);
+    public void addNewClient(UUID publicKey, Client client) {
+        clientMap.put(publicKey, client);
 
     }
 
-    public Client getClient(UUID publicUUID) {
-        if (clientMap.containsKey(publicUUID)) {
-            return clientMap.get(publicUUID);
+    public Client getClient(UUID publicKey) {
+        if (clientMap.containsKey(publicKey)) {
+            return clientMap.get(publicKey);
         } else {
             throw new IllegalArgumentException();
         }
     }
 
-    public void removeClient(UUID publicUUID) {
-        clientMap.remove(publicUUID);
+    public void removeClient(UUID publicKey) {
+        clientMap.remove(publicKey);
     }
 }

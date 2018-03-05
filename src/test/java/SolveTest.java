@@ -36,11 +36,11 @@ public class SolveTest {
     @Before
     public void setUp() {
         responser = new Solve();
-        UUID publicUUID = UUID.fromString(PUBLIC_UUID_STRING);
+        UUID publicKey = UUID.fromString(PUBLIC_UUID_STRING);
         if (!testName.getMethodName().equals("noSuchClient")) {
             ClientStorage storage = ClientStorage.getInstance();
             client = new Client();
-            storage.addNewClient(publicUUID, client);
+            storage.addNewClient(publicKey, client);
         }
         parameters = new HashMap<>();
     }
@@ -48,8 +48,8 @@ public class SolveTest {
     @After
     public void tearDown() {
         ClientStorage storage = ClientStorage.getInstance();
-        UUID publicUUID = UUID.fromString(PUBLIC_UUID_STRING);
-        storage.removeClient(publicUUID);
+        UUID publicKey = UUID.fromString(PUBLIC_UUID_STRING);
+        storage.removeClient(publicKey);
     }
 
     @Test

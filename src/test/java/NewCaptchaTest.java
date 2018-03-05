@@ -29,10 +29,10 @@ public class NewCaptchaTest {
     @Before
     public void setUp() {
         responser = new NewCaptcha();
-        UUID publicUUID = UUID.fromString(PUBLIC_UUID_STRING);
+        UUID publicKey = UUID.fromString(PUBLIC_UUID_STRING);
         if (!testName.getMethodName().equals("noSuchClient")) {
             ClientStorage storage = ClientStorage.getInstance();
-            storage.addNewClient(publicUUID, new Client());
+            storage.addNewClient(publicKey, new Client());
         }
         parameters = new HashMap<>();
     }
@@ -40,8 +40,8 @@ public class NewCaptchaTest {
     @After
     public void tearDown() {
         ClientStorage storage = ClientStorage.getInstance();
-        UUID publicUUID = UUID.fromString(PUBLIC_UUID_STRING);
-        storage.removeClient(publicUUID);
+        UUID publicKey = UUID.fromString(PUBLIC_UUID_STRING);
+        storage.removeClient(publicKey);
     }
 
     @Test

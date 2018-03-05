@@ -8,10 +8,10 @@ import java.io.IOException;
 public class CaptchaImageConverter implements ImageConverter {
 
     public InputStream convertImageToStream(BufferedImage image) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(image, "png", baos);
-        InputStream is = new ByteArrayInputStream(baos.toByteArray());
-        return is;
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ImageIO.write(image, "png", byteArrayOutputStream);
+        InputStream inputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+        return inputStream;
     }
 }
 

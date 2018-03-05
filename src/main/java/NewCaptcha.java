@@ -12,9 +12,9 @@ public class NewCaptcha implements IResponser {
 
     public Response generateResponse(Map<String, List<String>> parameters) {
         try {
-            UUID receivedPublicUUID = UUID.fromString(parameters.get("public").get(0));
+            UUID receivedPublicKey = UUID.fromString(parameters.get("public").get(0));
             ClientStorage storage = ClientStorage.getInstance();
-            Client client = storage.getClient(receivedPublicUUID);
+            Client client = storage.getClient(receivedPublicKey);
             client.newCaptcha();
             Captcha captcha = client.getCaptcha();
             SimplePropertyPreFilter filter;

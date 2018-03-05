@@ -12,14 +12,14 @@ public class Registry implements IResponser {
 
     public Response generateResponse(Map<String, List<String>> parameters) {
         IKeyGenerator keyGenerator = new KeyGenerator();
-        UUID secretUUID = keyGenerator.getSecretKey();
-        UUID publicUUID = keyGenerator.getPublicKey(secretUUID);
+        UUID secretKey = keyGenerator.getSecretKey();
+        UUID publicKey = keyGenerator.getPublicKey(secretKey);
         Client client = new Client();
         ClientStorage storage = ClientStorage.getInstance();
-        storage.addNewClient(publicUUID, client);
+        storage.addNewClient(publicKey, client);
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("public", publicUUID);
-        jsonObject.put("secret", secretUUID);
+        jsonObject.put("public", publicKey);
+        jsonObject.put("secret", secretKey);
         String body = JSON.toJSONString(jsonObject);
         Response response = NanoHTTPD.newFixedLengthResponse(Status.OK, "application/json", body);
         return response;
