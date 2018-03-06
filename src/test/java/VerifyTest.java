@@ -1,4 +1,6 @@
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import com.alibaba.fastjson.JSON;
 import fi.iki.elonen.NanoHTTPD.Response;
@@ -94,7 +96,6 @@ public class VerifyTest {
         String mimeType = response.getMimeType();
         String body = BodyMaker.getBody(response);
         Map<String, Object> responseBody = JSON.parseObject(body);
-
         try {
             Boolean success = (Boolean) responseBody.get("success");
             Integer errorCode = (Integer) responseBody.get("errorCode");
@@ -113,7 +114,7 @@ public class VerifyTest {
 
     @Test
     public void successTrueVerify() {
-        ServerParameters.setToken(client, TOKEN);
+        ServerParameters.setObjectField(client, "token", TOKEN);
         RequestParameters.initParameter(parameters, "secret", SECRET_UUID_STRING);
         RequestParameters.initParameter(parameters, "response", TOKEN);
 
@@ -122,7 +123,6 @@ public class VerifyTest {
         String mimeType = response.getMimeType();
         String body = BodyMaker.getBody(response);
         Map<String, Object> responseBody = JSON.parseObject(body);
-
         try {
             Boolean success = (Boolean) responseBody.get("success");
             Integer errorCode = (Integer) responseBody.get("errorCode");
@@ -141,7 +141,7 @@ public class VerifyTest {
 
     @Test
     public void twoTimesSameTokenVerify() {
-        ServerParameters.setToken(client, TOKEN);
+        ServerParameters.setObjectField(client, "token", TOKEN);
         RequestParameters.initParameter(parameters, "secret", SECRET_UUID_STRING);
         RequestParameters.initParameter(parameters, "response", TOKEN);
 
@@ -151,7 +151,6 @@ public class VerifyTest {
         String mimeType = responseTwo.getMimeType();
         String body = BodyMaker.getBody(responseTwo);
         Map<String, Object> responseBody = JSON.parseObject(body);
-
         try {
             Boolean success = (Boolean) responseBody.get("success");
             Integer errorCode = (Integer) responseBody.get("errorCode");

@@ -2,6 +2,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.alibaba.fastjson.JSON;
 import fi.iki.elonen.NanoHTTPD.IHTTPSession;
 import fi.iki.elonen.NanoHTTPD.Method;
 import fi.iki.elonen.NanoHTTPD.Response;
@@ -18,20 +19,27 @@ import org.junit.Test;
 
 public class CaptchaHttpServerTest {
 
+    private CaptchaHttpServer server;
+
     private String PUBLIC_UUID_STRING = "c88c4314-0e11-3a44-9a4b-dd2eba64c868";
 
     private String CAPTCHAID = "12345678";
 
+    private String ANSWER = "1234";
+
     private Map<String, List<String>> parameters;
 
-    private Client client;
+    private Captcha captcha;
 
     @Before
     public void setUp() {
+        server = new CaptchaHttpServer();
         UUID publicKey = UUID.fromString(PUBLIC_UUID_STRING);
         ClientStorage storage = ClientStorage.getInstance();
-        client = new Client();
+        Client client = new Client();
         storage.addNewClient(publicKey, client);
+        client.newCaptcha();
+        captcha = client.getCaptcha();
         parameters = new HashMap<>();
     }
 
@@ -43,14 +51,14 @@ public class CaptchaHttpServerTest {
     }
 
     @Test
-    public void serve() {
-        CaptchaHttpServer server = new CaptchaHttpServer();
+    public void serveGet() {
         IHTTPSession session = mock(IHTTPSession.class);
         when(session.getMethod()).thenReturn(Method.GET);
         when(session.getUri()).thenReturn("/captcha/image");
-        initRequestParameters();
         when(session.getParameters()).thenReturn(parameters);
-        ServerParameters.setCaptchaId(client, CAPTCHAID);
+        RequestParameters.initParameter(parameters, "public", PUBLIC_UUID_STRING);
+        RequestParameters.initParameter(parameters, "request", CAPTCHAID);
+        ServerParameters.setObjectField(captcha, "captchaId", CAPTCHAID);
 
         Response response = server.serve(session);
         IStatus status = response.getStatus();
@@ -61,14 +69,34 @@ public class CaptchaHttpServerTest {
         assertEquals("Неверный Mime-type", "image/png", mimeType);
     }
 
+    @Test
+    public void servePost() {
+        IHTTPSession session = mock(IHTTPSession.class);
+        when(session.getMethod()).thenReturn(Method.POST);
+        when(session.getUri()).thenReturn("/captcha/solve");
+        when(session.getParameters()).thenReturn(parameters);
+        RequestParameters.initParameter(parameters, "public", PUBLIC_UUID_STRING);
+        RequestParameters.initParameter(parameters, "request", CAPTCHAID);
+        RequestParameters.initParameter(parameters, "answer", ANSWER);
+        ServerParameters.setObjectField(captcha, "captchaId", CAPTCHAID);
+        ServerParameters.setObjectField(captcha, "answer", ANSWER);
 
+        Response response = server.serve(session);
+        IStatus status = response.getStatus();
+        String mimeType = response.getMimeType();
+        String body = BodyMaker.getBody(response);
+        try {
+            Map<String, Object> responseBody = JSON.parseObject(body);
+            String responseToken = (String) responseBody.get("response");
 
-    private void initRequestParameters() {
-        List<String> parameterPublic = new LinkedList<>();
-        parameterPublic.add(PUBLIC_UUID_STRING);
-        parameters.put("public", parameterPublic);
-        List<String> parameterRequest = new LinkedList<>();
-        parameterRequest.add(CAPTCHAID);
-        parameters.put("request", parameterRequest);
+            assertEquals("Неверный статус отклика", Status.OK, status);
+            assertEquals("Неверный Mime-type", "application/json", mimeType);
+            assertEquals("Длина response неверна", Client.NUM_CHARS_TOKEN, responseToken.length());
+        } catch (ClassCastException e) {
+            fail("Неверный тип объекта response");
+        } catch (NullPointerException e) {
+            fail("В параметрах JSON отсутствует response");
+        }
     }
+
 }

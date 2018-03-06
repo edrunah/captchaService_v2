@@ -1,3 +1,5 @@
+import static org.junit.Assert.fail;
+
 import fi.iki.elonen.NanoHTTPD.Response;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,11 +15,11 @@ public class BodyMaker {
         try {
             int c;
             while ((c = reader.read()) != -1) {
-                bodyBuilder.append((char)c);
+                bodyBuilder.append((char) c);
             }
         } catch (IOException e) {
-            return "";
+            fail("Ошибка обработки тела ответа сервера");
         }
-        return  bodyBuilder.toString();
+        return bodyBuilder.toString();
     }
 }

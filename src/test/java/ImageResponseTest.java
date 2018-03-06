@@ -1,4 +1,4 @@
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import fi.iki.elonen.NanoHTTPD.Response;
 import fi.iki.elonen.NanoHTTPD.Response.IStatus;
@@ -22,7 +22,7 @@ public class ImageResponseTest {
 
     private String CAPTCHAID = "12345678";
 
-    private Client client;
+    private Captcha captcha;
 
     private Map<String, List<String>> parameters;
 
@@ -35,8 +35,10 @@ public class ImageResponseTest {
         UUID publicKey = UUID.fromString(PUBLIC_UUID_STRING);
         if (!testName.getMethodName().equals("noSuchClient")) {
             ClientStorage storage = ClientStorage.getInstance();
-            client = new Client();
+            Client client = new Client();
             storage.addNewClient(publicKey, client);
+            client.newCaptcha();
+            captcha = client.getCaptcha();
         }
         parameters = new HashMap<>();
     }
@@ -96,7 +98,7 @@ public class ImageResponseTest {
 
     @Test
     public void successfulImageCreation() {
-        ServerParameters.setCaptchaId(client, CAPTCHAID);
+        ServerParameters.setObjectField(captcha, "captchaId", CAPTCHAID);
         RequestParameters.initParameter(parameters, "public", PUBLIC_UUID_STRING);
         RequestParameters.initParameter(parameters, "request", CAPTCHAID);
 

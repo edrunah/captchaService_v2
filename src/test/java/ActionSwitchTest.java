@@ -1,4 +1,4 @@
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import fi.iki.elonen.NanoHTTPD.Method;
 import org.junit.Test;

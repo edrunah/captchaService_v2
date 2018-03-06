@@ -19,7 +19,7 @@ public enum ActionType {
     }
 
     static public ActionType getType(Method method, String uri) {
-        for (ActionType type: ActionType.values()) {
+        for (ActionType type : ActionType.values()) {
             if (type.uri.equals(uri) && type.method.equals(method)) {
                 return type;
             }

@@ -24,7 +24,7 @@ public class ClientTest {
 
     @Test
     public void getCaptcha() {
-        ServerParameters.setCaptchaId(client, "");
+//        ServerParameters.setObjectField(captcha, "captchaId", "12345678");
     }
 
     @Test

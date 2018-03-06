@@ -17,17 +17,17 @@ public class KeyGeneratorTest {
     public void getPublicKey() {
         UUID secretKey = UUID.fromString("c88c4314-0e11-3a44-9a4b-dd2eba64c868");
 
-        boolean uuidType = generator.getPublicKey(secretKey) instanceof UUID;
+        boolean isUuidType = generator.getPublicKey(secretKey) instanceof UUID;
 
-        assertTrue(uuidType);
+        assertTrue(isUuidType);
     }
 
     @Test
     public void getSecretKey() {
         UUID secretKey = generator.getSecretKey();
 
-        boolean uuidType = secretKey instanceof UUID;
+        boolean isUuidType = secretKey instanceof UUID;
 
-        assertTrue(uuidType);
+        assertTrue(isUuidType);
     }
 }

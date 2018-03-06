@@ -1,11 +1,12 @@
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.fail;
 
 import com.alibaba.fastjson.JSON;
 import fi.iki.elonen.NanoHTTPD.Response;
 import fi.iki.elonen.NanoHTTPD.Response.IStatus;
 import fi.iki.elonen.NanoHTTPD.Response.Status;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -25,7 +26,7 @@ public class SolveTest {
 
     private String ANSWER = "1234";
 
-    private Client client;
+    private Captcha captcha;
 
     private Map<String, List<String>> parameters;
 
@@ -38,8 +39,10 @@ public class SolveTest {
         UUID publicKey = UUID.fromString(PUBLIC_UUID_STRING);
         if (!testName.getMethodName().equals("noSuchClient")) {
             ClientStorage storage = ClientStorage.getInstance();
-            client = new Client();
+            Client client = new Client();
             storage.addNewClient(publicKey, client);
+            client.newCaptcha();
+            captcha = client.getCaptcha();
         }
         parameters = new HashMap<>();
     }
@@ -69,12 +72,8 @@ public class SolveTest {
 
     @Test
     public void notEnoughData() {
-        List<String> parameterPublic = new LinkedList<>();
-        parameterPublic.add(PUBLIC_UUID_STRING);
-        parameters.put("public", parameterPublic);
-        List<String> parameterRequest = new LinkedList<>();
-        parameterRequest.add(CAPTCHAID);
-        parameters.put("request", parameterRequest);
+        RequestParameters.initParameter(parameters, "public", PUBLIC_UUID_STRING);
+        RequestParameters.initParameter(parameters, "request", CAPTCHAID);
 
         Response response = responser.generateResponse(parameters);
         IStatus status = response.getStatus();
@@ -88,7 +87,8 @@ public class SolveTest {
 
     @Test
     public void rightPairRequestAnswer() {
-        ServerParameters.setCaptchaIdAndAnswer(client, CAPTCHAID, ANSWER);
+        ServerParameters.setObjectField(captcha, "captchaId", CAPTCHAID);
+        ServerParameters.setObjectField(captcha, "answer", ANSWER);
         RequestParameters.initParameter(parameters, "public", PUBLIC_UUID_STRING);
         RequestParameters.initParameter(parameters, "request", CAPTCHAID);
         RequestParameters.initParameter(parameters, "answer", ANSWER);
@@ -114,7 +114,8 @@ public class SolveTest {
 
     @Test
     public void twoTimesRightPairRequestAnswer() {
-        ServerParameters.setCaptchaIdAndAnswer(client, CAPTCHAID, ANSWER);
+        ServerParameters.setObjectField(captcha, "captchaId", CAPTCHAID);
+        ServerParameters.setObjectField(captcha, "answer", ANSWER);
         RequestParameters.initParameter(parameters, "public", PUBLIC_UUID_STRING);
         RequestParameters.initParameter(parameters, "request", CAPTCHAID);
         RequestParameters.initParameter(parameters, "answer", ANSWER);
