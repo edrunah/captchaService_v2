@@ -15,8 +15,7 @@ public class Solve implements IResponser {
             String receivedAnswer = parameters.get("answer").get(0);
             ClientStorage storage = ClientStorage.getInstance();
             Client client = storage.getClient(receivedPublicKey);
-            Captcha captcha = client.getCaptcha();
-            if (client.hasCaptchaId(receivedCaptchaId) && captcha.hasAnswer(receivedAnswer)) {
+            if (client.hasCaptchaId(receivedCaptchaId) && client.captchaHasAnswer(receivedAnswer)) {
                 client.generateToken();
                 client.deleteCaptcha();
                 String body = JSON.toJSONString(client);

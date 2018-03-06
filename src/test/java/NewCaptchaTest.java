@@ -1,7 +1,6 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
 import com.alibaba.fastjson.JSON;
 import fi.iki.elonen.NanoHTTPD.Response;
@@ -82,19 +81,15 @@ public class NewCaptchaTest {
         String mimeType = response.getMimeType();
         String body = BodyMaker.getBody(response);
         Map<String, Object> responseBody = JSON.parseObject(body);
-        try {
-            String request = (String) responseBody.get("request");
-            String answer = (String) responseBody.get("answer");
+        String request = (String) responseBody.get("request");
+        String answer = (String) responseBody.get("answer");
 
-            assertNotNull("В отклике отсутствует request", request);
-            assertNull("В отклике есть answer", answer);
-            assertEquals("Неверный статус отклика", Status.OK, status);
-            assertEquals("Неверный Mime-type", "application/json", mimeType);
-            assertEquals("Количество букв request неверно", Captcha.NUM_CHARS_CAPTCHAID,
-                request.length());
-        } catch (ClassCastException e) {
-            fail("Неверный тип объекта request");
-        }
+        assertNotNull("В отклике отсутствует request", request);
+        assertNull("В отклике есть answer", answer);
+        assertEquals("Неверный статус отклика", Status.OK, status);
+        assertEquals("Неверный Mime-type", "application/json", mimeType);
+        assertEquals("Количество букв request неверно", Captcha.NUM_CHARS_CAPTCHAID,
+            request.length());
     }
 
     @Test
@@ -106,21 +101,17 @@ public class NewCaptchaTest {
         String mimeType = response.getMimeType();
         String body = BodyMaker.getBody(response);
         Map<String, Object> responseBody = JSON.parseObject(body);
-        try {
-            String request = (String) responseBody.get("request");
-            String answer = (String) responseBody.get("answer");
+        String request = (String) responseBody.get("request");
+        String answer = (String) responseBody.get("answer");
 
-            assertNotNull("В отклике отсутствует request", request);
-            assertNotNull("В отклике отсутствует answer", answer);
-            assertEquals("Неверный статус отклика", Status.OK, status);
-            assertEquals("Неверный Mime-type", "application/json", mimeType);
-            assertEquals("Количество букв request неверно", Captcha.NUM_CHARS_CAPTCHAID,
-                request.length());
-            assertEquals("Количество букв answer неверно", Captcha.NUM_CHARS_ANSWER,
-                answer.length());
-        } catch (ClassCastException e) {
-            fail("Неверный тип объекта request или answer");
-        }
+        assertNotNull("В отклике отсутствует request", request);
+        assertNotNull("В отклике отсутствует answer", answer);
+        assertEquals("Неверный статус отклика", Status.OK, status);
+        assertEquals("Неверный Mime-type", "application/json", mimeType);
+        assertEquals("Количество букв request неверно", Captcha.NUM_CHARS_CAPTCHAID,
+            request.length());
+        assertEquals("Количество букв answer неверно", Captcha.NUM_CHARS_ANSWER,
+            answer.length());
     }
 
 }

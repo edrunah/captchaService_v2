@@ -11,6 +11,9 @@ public class Client {
     static {
         try {
             TIME_TO_LIVE = Integer.parseInt(System.getProperty("ttl")) * 1000; // в миллисекундах
+            if (TIME_TO_LIVE < 0) {
+                TIME_TO_LIVE *= (-1);
+            }
         } catch (NumberFormatException e) {
             TIME_TO_LIVE = 15 * 1000;
         }
@@ -25,7 +28,7 @@ public class Client {
         captcha = new Captcha();
         captcha.initialize();
         Timer timer = new Timer();
-        timer.schedule(new CaptchaKill(), TIME_TO_LIVE);
+        timer.schedule(new CaptchaKill(this), TIME_TO_LIVE);
     }
 
     public Captcha getCaptcha() {
@@ -33,11 +36,21 @@ public class Client {
     }
 
     public boolean hasCaptchaId(String receivedCaptchaId) {
-        if (captcha == null) {
+        try {
+            String captchaId = captcha.getCaptchaId();
+            return captchaId.equals(receivedCaptchaId);
+        } catch (NullPointerException e) {
             return false;
         }
-        String captchaId = captcha.getCaptchaId();
-        return captchaId.equals(receivedCaptchaId);
+    }
+
+    public boolean captchaHasAnswer(String receivedAnswer) {
+        try {
+            String answer = captcha.getAnswer();
+            return answer.equals(receivedAnswer);
+        } catch (NullPointerException e) {
+            return false;
+        }
     }
 
     public void deleteCaptcha() {
@@ -65,9 +78,15 @@ public class Client {
 
     private class CaptchaKill extends TimerTask {
 
+        private Client client;
+
+        private CaptchaKill(Client client) {
+            this.client = client;
+        }
+
         @Override
         public void run() {
-            deleteCaptcha();
+            client.deleteCaptcha();
             System.out.println("Captcha killed");
         }
     }

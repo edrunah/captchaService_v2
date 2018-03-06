@@ -98,18 +98,12 @@ public class SolveTest {
         String mimeType = response.getMimeType();
         String body = BodyMaker.getBody(response);
         assertNotEquals("Правильный ответ не принят", "Wrong pair request-answer\n", body);
-        try {
-            Map<String, Object> responseBody = JSON.parseObject(body);
-            String responseToken = (String) responseBody.get("response");
+        Map<String, Object> responseBody = JSON.parseObject(body);
+        String responseToken = (String) responseBody.get("response");
 
-            assertEquals("Неверный статус отклика", Status.OK, status);
-            assertEquals("Неверный Mime-type", "application/json", mimeType);
-            assertEquals("Длина response неверна", Client.NUM_CHARS_TOKEN, responseToken.length());
-        } catch (ClassCastException e) {
-            fail("Неверный тип объекта response");
-        } catch (NullPointerException e) {
-            fail("В параметрах JSON отсутствует response");
-        }
+        assertEquals("Неверный статус отклика", Status.OK, status);
+        assertEquals("Неверный Mime-type", "application/json", mimeType);
+        assertEquals("Длина response неверна", Client.NUM_CHARS_TOKEN, responseToken.length());
     }
 
     @Test

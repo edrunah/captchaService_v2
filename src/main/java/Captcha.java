@@ -19,13 +19,6 @@ public class Captcha {
         return answer;
     }
 
-    public boolean hasAnswer(String receivedAnswer) {
-        if (answer == null) {
-            return false;
-        }
-        return answer.equals(receivedAnswer);
-    }
-
     public void initialize() {
         StringGenerator g = new RandomStringGenerator();
         captchaId = g.generate(NUM_CHARS_CAPTCHAID);

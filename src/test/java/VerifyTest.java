@@ -1,6 +1,5 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
 import com.alibaba.fastjson.JSON;
 import fi.iki.elonen.NanoHTTPD.Response;
@@ -96,19 +95,13 @@ public class VerifyTest {
         String mimeType = response.getMimeType();
         String body = BodyMaker.getBody(response);
         Map<String, Object> responseBody = JSON.parseObject(body);
-        try {
-            Boolean success = (Boolean) responseBody.get("success");
-            Integer errorCode = (Integer) responseBody.get("errorCode");
+        Boolean success = (Boolean) responseBody.get("success");
+        Integer errorCode = (Integer) responseBody.get("errorCode");
 
-            assertEquals("Неверный статус отклика", Status.FORBIDDEN, status);
-            assertEquals("Неверный Mime-type", "application/json", mimeType);
-            assertEquals("success", false, success.booleanValue());
-            assertEquals("errorCode", 403, errorCode.intValue());
-        } catch (ClassCastException e) {
-            fail("Неверный тип объекта success или errorCode");
-        } catch (NullPointerException e) {
-            fail("В параметрах JSON отсутствует success или errorCode");
-        }
+        assertEquals("Неверный статус отклика", Status.FORBIDDEN, status);
+        assertEquals("Неверный Mime-type", "application/json", mimeType);
+        assertEquals("success", false, success.booleanValue());
+        assertEquals("errorCode", 403, errorCode.intValue());
 
     }
 
@@ -123,20 +116,13 @@ public class VerifyTest {
         String mimeType = response.getMimeType();
         String body = BodyMaker.getBody(response);
         Map<String, Object> responseBody = JSON.parseObject(body);
-        try {
-            Boolean success = (Boolean) responseBody.get("success");
-            Integer errorCode = (Integer) responseBody.get("errorCode");
+        Boolean success = (Boolean) responseBody.get("success");
+        Integer errorCode = (Integer) responseBody.get("errorCode");
 
-            assertEquals("Неверный статус отклика", Status.OK, status);
-            assertEquals("Неверный Mime-type", "application/json", mimeType);
-            assertEquals("success", true, success.booleanValue());
-            assertNull("errorCode", errorCode);
-        } catch (ClassCastException e) {
-            fail("Неверный тип объекта success или errorCode");
-        } catch (NullPointerException e) {
-            fail("В параметрах JSON отсутствует success или errorCode");
-        }
-
+        assertEquals("Неверный статус отклика", Status.OK, status);
+        assertEquals("Неверный Mime-type", "application/json", mimeType);
+        assertEquals("success", true, success.booleanValue());
+        assertNull("errorCode", errorCode);
     }
 
     @Test
@@ -151,20 +137,13 @@ public class VerifyTest {
         String mimeType = responseTwo.getMimeType();
         String body = BodyMaker.getBody(responseTwo);
         Map<String, Object> responseBody = JSON.parseObject(body);
-        try {
-            Boolean success = (Boolean) responseBody.get("success");
-            Integer errorCode = (Integer) responseBody.get("errorCode");
+        Boolean success = (Boolean) responseBody.get("success");
+        Integer errorCode = (Integer) responseBody.get("errorCode");
 
-            assertEquals("Неверный статус отклика", Status.FORBIDDEN, status);
-            assertEquals("Неверный Mime-type", "application/json", mimeType);
-            assertEquals("success", false, success.booleanValue());
-            assertEquals("errorCode", 403, errorCode.intValue());
-        } catch (ClassCastException e) {
-            fail("Неверный тип объекта success или errorCode");
-        } catch (NullPointerException e) {
-            fail("В параметрах JSON отсутствует success или errorCode");
-        }
-
+        assertEquals("Неверный статус отклика", Status.FORBIDDEN, status);
+        assertEquals("Неверный Mime-type", "application/json", mimeType);
+        assertEquals("success", false, success.booleanValue());
+        assertEquals("errorCode", 403, errorCode.intValue());
     }
 
 }

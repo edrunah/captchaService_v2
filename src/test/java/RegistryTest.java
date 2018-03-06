@@ -1,5 +1,3 @@
-import static org.junit.Assert.fail;
-
 import com.alibaba.fastjson.JSON;
 import fi.iki.elonen.NanoHTTPD.Response;
 import java.util.HashMap;
@@ -19,17 +17,9 @@ public class RegistryTest {
         String body = BodyMaker.getBody(response);
         Map<String, Object> responseBody = JSON.parseObject(body);
 
-        try {
-            String publicKeyString = (String) responseBody.get("public");
-            String secretKeyString = (String) responseBody.get("secret");
-            UUID.fromString(publicKeyString);
-            UUID.fromString(secretKeyString);
-        } catch (ClassCastException e) {
-            fail("Неверный тип объекта public или secret");
-        } catch (IllegalArgumentException e) {
-            fail("Неверный формат строки UUID");
-        } catch (NullPointerException e) {
-            fail("В параметрах JSON отсутствует public или secret");
-        }
+        String publicKeyString = (String) responseBody.get("public");
+        String secretKeyString = (String) responseBody.get("secret");
+        UUID.fromString(publicKeyString);
+        UUID.fromString(secretKeyString);
     }
 }

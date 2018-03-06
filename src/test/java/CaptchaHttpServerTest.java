@@ -9,7 +9,6 @@ import fi.iki.elonen.NanoHTTPD.Response;
 import fi.iki.elonen.NanoHTTPD.Response.IStatus;
 import fi.iki.elonen.NanoHTTPD.Response.Status;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -85,18 +84,12 @@ public class CaptchaHttpServerTest {
         IStatus status = response.getStatus();
         String mimeType = response.getMimeType();
         String body = BodyMaker.getBody(response);
-        try {
-            Map<String, Object> responseBody = JSON.parseObject(body);
-            String responseToken = (String) responseBody.get("response");
+        Map<String, Object> responseBody = JSON.parseObject(body);
+        String responseToken = (String) responseBody.get("response");
 
-            assertEquals("Неверный статус отклика", Status.OK, status);
-            assertEquals("Неверный Mime-type", "application/json", mimeType);
-            assertEquals("Длина response неверна", Client.NUM_CHARS_TOKEN, responseToken.length());
-        } catch (ClassCastException e) {
-            fail("Неверный тип объекта response");
-        } catch (NullPointerException e) {
-            fail("В параметрах JSON отсутствует response");
-        }
+        assertEquals("Неверный статус отклика", Status.OK, status);
+        assertEquals("Неверный Mime-type", "application/json", mimeType);
+        assertEquals("Длина response неверна", Client.NUM_CHARS_TOKEN, responseToken.length());
     }
 
 }
