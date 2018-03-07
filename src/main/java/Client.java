@@ -61,9 +61,9 @@ public class Client {
         token = new RandomStringGenerator().generate(NUM_CHARS_TOKEN);
     }
 
-    public String getToken() { // для перевода в JSON
+    public String getToken() { // для fastJson
         return token;
-    } // для fastJson
+    }
 
     public boolean hasToken(String receivedToken) {
         if (token == null) {

@@ -2,8 +2,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.awt.image.BufferedImage;
-import java.util.concurrent.TimeUnit;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,11 +32,10 @@ public class ClientTest {
 
     @Test
     public void captchaTimeIsOver() throws InterruptedException {
-        client.newCaptcha();
-//        for (int i = 0; i < 1000000; i++) {
-//            new BufferedImage(100, 100, BufferedImage.TYPE_INT_ARGB);
-//        }
         Captcha captcha = client.getCaptcha();
+
+        client.newCaptcha();
+        Thread.sleep(1000);
 
         assertNull(captcha);
     }

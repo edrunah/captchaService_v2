@@ -1,6 +1,5 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.fail;
 
 import com.alibaba.fastjson.JSON;
 import fi.iki.elonen.NanoHTTPD.Response;
