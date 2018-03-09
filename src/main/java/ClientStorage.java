@@ -1,3 +1,4 @@
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -6,7 +7,7 @@ public class ClientStorage {
 
     private static ClientStorage storage = new ClientStorage();
 
-    private Map<UUID, Client> clientMap = new HashMap<UUID, Client>();
+    private Map<UUID, Client> clientMap = Collections.synchronizedMap(new HashMap<UUID, Client>());
 
     private ClientStorage() {
     }
