@@ -10,7 +10,7 @@ public class RegistryTest {
 
     @Test
     public void registry() {
-        IResponser responser = new Registry();
+        Responser responser = new Registry();
         Map<String, List<String>> parameters = new HashMap<>();
 
         Response response = responser.generateResponse(parameters);

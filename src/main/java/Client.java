@@ -8,6 +8,8 @@ public class Client {
 
     public static long TIME_TO_LIVE;
 
+    private Timer timer;
+
     static {
         try {
             TIME_TO_LIVE = Integer.parseInt(System.getProperty("ttl")) * 1000; // в миллисекундах
@@ -15,7 +17,7 @@ public class Client {
                 TIME_TO_LIVE *= (-1);
             }
         } catch (NumberFormatException e) {
-            TIME_TO_LIVE = 15 * 1000;
+            TIME_TO_LIVE = 60 * 1000;
         }
     }
 
@@ -27,8 +29,8 @@ public class Client {
     public void newCaptcha() {
         captcha = new Captcha();
         captcha.initialize();
-        Timer timer = new Timer();
-        timer.schedule(new CaptchaKill(this), TIME_TO_LIVE);
+        timer = new Timer();
+        timer.schedule(new CaptchaKill(), TIME_TO_LIVE);
     }
 
     public Captcha getCaptcha() {
@@ -55,6 +57,7 @@ public class Client {
 
     public void deleteCaptcha() {
         captcha = null;
+        timer.cancel();
     }
 
     public void generateToken() {
@@ -78,16 +81,9 @@ public class Client {
 
     private class CaptchaKill extends TimerTask {
 
-        private Client client;
-
-        private CaptchaKill(Client client) {
-            this.client = client;
-        }
-
         @Override
         public void run() {
-            client.deleteCaptcha();
-            System.out.println("Captcha killed");
+            captcha = null;
         }
     }
 }

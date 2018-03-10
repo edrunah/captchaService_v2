@@ -17,7 +17,7 @@ import org.junit.rules.TestName;
 
 public class SolveTest {
 
-    private IResponser responser;
+    private Responser responser;
 
     private String PUBLIC_UUID_STRING = "c88c4314-0e11-3a44-9a4b-dd2eba64c868";
 

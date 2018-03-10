@@ -2,7 +2,6 @@ import static org.junit.Assert.fail;
 
 import java.lang.reflect.Field;
 
-
 public class ServerParameters {
 
     public static void setObjectField(Object object, String field, String value) {

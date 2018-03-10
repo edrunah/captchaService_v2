@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class Verify implements IResponser {
+public class Verify implements Responser {
 
     public Response generateResponse(Map<String, List<String>> parameters) {
         try {

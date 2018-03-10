@@ -9,7 +9,7 @@ public class ActionSwitchTest {
     public void registry() {
         ActionSwitch actionSwitch = new ActionSwitch(Method.POST, "/client/register");
 
-        IResponser responser = actionSwitch.selectResponseAction();
+        Responser responser = actionSwitch.selectResponseAction();
         boolean isRegistry = responser instanceof Registry;
 
         assertTrue(isRegistry);
@@ -19,7 +19,7 @@ public class ActionSwitchTest {
     public void newCaptcha() {
         ActionSwitch actionSwitch = new ActionSwitch(Method.GET, "/captcha/new");
 
-        IResponser responser = actionSwitch.selectResponseAction();
+        Responser responser = actionSwitch.selectResponseAction();
         boolean isNewCaptcha = responser instanceof NewCaptcha;
 
         assertTrue(isNewCaptcha);
@@ -29,7 +29,7 @@ public class ActionSwitchTest {
     public void imageResponse() {
         ActionSwitch actionSwitch = new ActionSwitch(Method.GET, "/captcha/image");
 
-        IResponser responser = actionSwitch.selectResponseAction();
+        Responser responser = actionSwitch.selectResponseAction();
         boolean isImageResponse = responser instanceof ImageResponse;
 
         assertTrue(isImageResponse);
@@ -39,7 +39,7 @@ public class ActionSwitchTest {
     public void solve() {
         ActionSwitch actionSwitch = new ActionSwitch(Method.POST, "/captcha/solve");
 
-        IResponser responser = actionSwitch.selectResponseAction();
+        Responser responser = actionSwitch.selectResponseAction();
         boolean isSolve = responser instanceof Solve;
 
         assertTrue(isSolve);
@@ -49,7 +49,7 @@ public class ActionSwitchTest {
     public void verify() {
         ActionSwitch actionSwitch = new ActionSwitch(Method.GET, "/captcha/verify");
 
-        IResponser responser = actionSwitch.selectResponseAction();
+        Responser responser = actionSwitch.selectResponseAction();
         boolean isVerify = responser instanceof Verify;
 
         assertTrue(isVerify);
@@ -59,7 +59,7 @@ public class ActionSwitchTest {
     public void defaultResponse() {
         ActionSwitch actionSwitch = new ActionSwitch(Method.GET, "/smth");
 
-        IResponser responser = actionSwitch.selectResponseAction();
+        Responser responser = actionSwitch.selectResponseAction();
         boolean isDefault = responser instanceof DefaultResponse;
 
         assertTrue(isDefault);

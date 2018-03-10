@@ -18,7 +18,7 @@ import org.junit.rules.TestName;
 
 public class VerifyTest {
 
-    private IResponser responser;
+    private Responser responser;
 
     private String TOKEN = "12345678";
 

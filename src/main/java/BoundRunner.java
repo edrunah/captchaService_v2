@@ -5,12 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
-/**
- * BoundRunner
- * <p>
- * The default threading strategy for NanoHTTPD launches a new thread every time. We override that here so we can put an
- * upper limit on the number of active threads using a thread pool.
- */
 class BoundRunner implements NanoHTTPD.AsyncRunner {
 
     private ExecutorService executorService;

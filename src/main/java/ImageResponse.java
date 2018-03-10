@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class ImageResponse implements IResponser {
+public class ImageResponse implements Responser {
 
     public Response generateResponse(Map<String, List<String>> parameters) {
         try {

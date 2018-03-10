@@ -32,7 +32,7 @@ public class CaptchaHttpServerTest {
 
     @Before
     public void setUp() {
-        server = new CaptchaHttpServer();
+        server = new CaptchaHttpServer(8080);
         UUID publicKey = UUID.fromString(PUBLIC_UUID_STRING);
         ClientStorage storage = ClientStorage.getInstance();
         Client client = new Client();

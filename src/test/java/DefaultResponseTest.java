@@ -12,7 +12,7 @@ public class DefaultResponseTest {
 
     @Test
     public void notFound() {
-        IResponser responser = new DefaultResponse();
+        Responser responser = new DefaultResponse();
         Map<String, List<String>> parameters = new HashMap<>();
 
         Response response = responser.generateResponse(parameters);

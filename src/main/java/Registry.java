@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class Registry implements IResponser {
+public class Registry implements Responser {
 
     public Response generateResponse(Map<String, List<String>> parameters) {
         IKeyGenerator keyGenerator = new KeyGenerator();

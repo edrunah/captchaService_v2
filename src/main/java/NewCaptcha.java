@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class NewCaptcha implements IResponser {
+public class NewCaptcha implements Responser {
 
     public Response generateResponse(Map<String, List<String>> parameters) {
         try {

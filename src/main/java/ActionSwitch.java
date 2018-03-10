@@ -8,7 +8,7 @@ public class ActionSwitch {
         uriType = ActionType.getType(method, uri);
     }
 
-    public IResponser selectResponseAction() {
+    public Responser selectResponseAction() {
         switch (uriType) {
             case CLIENT_REGISTER:
                 return new Registry();
