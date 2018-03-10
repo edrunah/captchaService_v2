@@ -40,7 +40,7 @@ public class CaptchaHttpServer extends NanoHTTPD {
 
             CaptchaHttpServer app = new CaptchaHttpServer(port);
             app.setAsyncRunner(new BoundRunner(Executors.newFixedThreadPool(webThreads)));
-            app.start(50, false);
+            app.start(100, false);
             logger.info("waiting for connections on port " + port + " using a maximum of " +
                 webThreads + " web threads\n"
                 + "Press Ctrl+C to quit");
