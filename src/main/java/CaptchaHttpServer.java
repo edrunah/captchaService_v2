@@ -1,7 +1,8 @@
 import fi.iki.elonen.NanoHTTPD;
+import fi.iki.elonen.util.ServerRunner;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,12 +39,11 @@ public class CaptchaHttpServer extends NanoHTTPD {
             int webThreads = Integer
                 .parseInt(cmd.getOptionValue("t", DEFAULT_THREADS_NUMBER.toString()));
 
-            CaptchaHttpServer app = new CaptchaHttpServer(port);
-            app.setAsyncRunner(new BoundRunner(Executors.newFixedThreadPool(webThreads)));
-            app.start(100, false);
-            logger.info("waiting for connections on port " + port + " using a maximum of " +
-                webThreads + " web threads\n"
-                + "Press Ctrl+C to quit");
+            CaptchaHttpServer server = new CaptchaHttpServer(port);
+            final ExecutorService threadPool = Executors.newFixedThreadPool(webThreads);
+            server.setAsyncRunner(new AsyncPoolRunner(threadPool));
+            ServerRunner.executeInstance(server);
+            threadPool.shutdown();
         } catch (IllegalArgumentException | UnrecognizedOptionException e) {
             logger.log(Level.SEVERE, "Incorrect server options");
             System.exit(1);
@@ -57,12 +57,11 @@ public class CaptchaHttpServer extends NanoHTTPD {
     public Response serve(IHTTPSession session) {
         Method method = session.getMethod();
         String uri = session.getUri();
-        CaptchaHttpServer.logger.log(Level.FINE, method + " '" + uri + "' ");
+        CaptchaHttpServer.logger.info(method + " '" + uri + "' ");
 
-        Map<String, String> files = new HashMap<String, String>();
-        if (Method.PUT.equals(method) || Method.POST.equals(method)) {
+        if (Method.POST.equals(method)) {
             try {
-                session.parseBody(files);
+                session.parseBody(new HashMap<>());
             } catch (IOException ioe) {
                 return NanoHTTPD
                     .newFixedLengthResponse(Response.Status.INTERNAL_ERROR, "text/plain",
@@ -77,4 +76,5 @@ public class CaptchaHttpServer extends NanoHTTPD {
         Response response = action.generateResponse(session.getParameters());
         return response;
     }
+
 }

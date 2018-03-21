@@ -17,9 +17,10 @@ public class CaptchaImageCreatorTest {
             CaptchaImageCreator creator = new CaptchaImageCreator();
 
             BufferedImage image = creator.create("mwq6");
-            OutputStream out = new FileOutputStream("image.png");
+            String path = "target/generated-test-sources/";
+            OutputStream out = new FileOutputStream(path + "image.png");
             ImageIO.write(image, "png", out);
-            BufferedImage readImage = ImageIO.read(new File("image.png"));
+            BufferedImage readImage = ImageIO.read(new File(path + "image.png"));
 
             assertEquals(180, readImage.getWidth());
             assertEquals(56, readImage.getHeight());

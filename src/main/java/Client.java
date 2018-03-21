@@ -6,18 +6,20 @@ public class Client {
 
     public static int NUM_CHARS_TOKEN = 8;
 
-    public static long TIME_TO_LIVE;
+    private static int DEFAULT_TIME_TO_LIVE = 60; // в секундах
+
+    private static long TIME_TO_LIVE; // в миллисекундах
 
     private Timer timer;
 
     static {
         try {
-            TIME_TO_LIVE = Integer.parseInt(System.getProperty("ttl")) * 1000; // в миллисекундах
+            TIME_TO_LIVE = Integer.parseInt(System.getProperty("ttl")) * 1000;
             if (TIME_TO_LIVE < 0) {
-                TIME_TO_LIVE *= (-1);
+                TIME_TO_LIVE *= -1;
             }
         } catch (NumberFormatException e) {
-            TIME_TO_LIVE = 60 * 1000;
+            TIME_TO_LIVE = DEFAULT_TIME_TO_LIVE * 1000;
         }
     }
 
@@ -83,7 +85,7 @@ public class Client {
 
         @Override
         public void run() {
-            captcha = null;
+            deleteCaptcha();
         }
     }
 }
